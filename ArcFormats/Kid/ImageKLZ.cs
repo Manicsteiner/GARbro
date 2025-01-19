@@ -16,6 +16,7 @@ namespace GameRes.Formats.Kid
         public KlzFormat()
         {
             Extensions = new string[] { "klz" };
+            Settings = null;
         }
 
         public override ImageMetaData ReadMetaData(IBinaryStream stream)
@@ -51,7 +52,7 @@ namespace GameRes.Formats.Kid
         /// <param name="input">input stream, include header</param>
         /// <returns></returns>
         public static Stream LzhStreamDecode(IBinaryStream input) {
-            List<byte> out_bytes;
+            byte[] out_bytes = new byte[0x4000];
             List<byte> f_out_bytes = new List<byte>();
             uint output_size = Binary.BigEndian(input.ReadUInt32());
             ushort fill_count = Binary.BigEndian(input.ReadUInt16());
@@ -78,7 +79,7 @@ namespace GameRes.Formats.Kid
                 out_bytes.Add(0);
                 temp--;
             }*/
-            out_bytes = Enumerable.Repeat((byte)0, 0x4000).ToList();
+            //out_bytes = Enumerable.Repeat((byte)0, 0x4000);
             // out.resize(0x4000) end
             if (fill_count > 0x4000)
             {
@@ -133,8 +134,9 @@ namespace GameRes.Formats.Kid
                     //input.Seek(OO48_sp, SeekOrigin.Begin);
                     v1 = input.ReadUInt8();
                     v0 = OO50_sp + s0;
-                    out_bytes.RemoveAt(v0);
-                    out_bytes.Insert(v0, v1);
+                    /*out_bytes.RemoveAt(v0);
+                    out_bytes.Insert(v0, v1);*/
+                    out_bytes[v0] = v1;
                     OO48_sp++;
                     OO42_sp++;
                     s0++;
@@ -182,8 +184,9 @@ namespace GameRes.Formats.Kid
                             {
                                 v1 = out_bytes[OO50_sp];
                                 v0 = OO50_sp + s0;
-                                out_bytes.RemoveAt(v0);
-                                out_bytes.Insert(v0, v1);
+                                /*out_bytes.RemoveAt(v0);
+                                out_bytes.Insert(v0, v1);*/
+                                out_bytes[v0] = v1;
                                 s0 += 1;
                                 /*v0 = s1 + 1;
                                 s1 = v0 & 0xFFFF;*/
@@ -207,8 +210,9 @@ namespace GameRes.Formats.Kid
                         v1 = out_bytes[OO50_sp + s1 & 0xFFFF];
                         v0 = OO50_sp;
                         v0 += s0;
-                        out_bytes.RemoveAt(v0);
-                        out_bytes.Insert(v0, v1);
+                        /*out_bytes.RemoveAt(v0);
+                        out_bytes.Insert(v0, v1);*/
+                        out_bytes[v0] = v1;
                         s0 += 1;
                         //v0 = s1 + 1;
                         s1 = (s1 + 1) & 0xFFFF;
