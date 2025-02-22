@@ -36,6 +36,11 @@ namespace GameRes.Formats.Kid
                 var entry = Create<Entry>(archivename + i.ToString("D5"));
                 entry.Offset = offset;
                 entry.Size = size;
+                if (file.View.ReadUInt32(offset) == 0x535043) // 'CPS'
+                {
+                    entry.Name = entry.Name + ".cps";
+                    entry.Type = "image";
+                }
                 dir.Add(entry);
             }
             if (dir.Count == 0)
@@ -52,7 +57,7 @@ namespace GameRes.Formats.Kid
                     return UnpackCps(input);
             }
             return input.AsStream;
-        }*/
+        }
         Stream UnpackCps(IBinaryStream input)
         {
             var header = input.ReadHeader(0x10);
@@ -145,6 +150,6 @@ namespace GameRes.Formats.Kid
         static void UnpackLnd16(IBinaryStream input, byte[] output)
         {
             throw new NotImplementedException("KID Lnd16 compression not implemented.");
-        }
+        }*/
     }
 }
